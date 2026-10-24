@@ -1,0 +1,24 @@
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Dependencies
+/vendor/
+/node_modules/
+
+# Local databases and backups
+*.sqlite
+*.sqlite3
+*.sql
+*.sql.gz
+*.bak
+
+# Logs
+*.log
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.vscode/

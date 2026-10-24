@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <!-- Background -->
+  <rect width="128" height="128" rx="14" fill="#234D40"/>
+
+  <!-- TR Monogram -->
+  <g fill="#F3F0E8">
+    <!-- T -->
+    <path d="M23 30 H72 V39 H53 V95 H43 V39 H23 Z"/>
+
+    <!-- R -->
+    <path d="M48 30 H73
+             C89 30 98 38 98 51
+             C98 61 92 68 81 71
+             L99 95 H85
+             L64 69 H69
+             C80 69 87 62 87 52
+             C87 43 81 39 72 39
+             H61 V95 H48 Z"/>
+  </g>
+
+  <!-- Accent dot -->
+  <circle cx="97" cy="22" r="8.5" fill="#D8DF9C"/>
+</svg>
