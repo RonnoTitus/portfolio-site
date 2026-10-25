@@ -1,5 +1,36 @@
-(()=>{const root=document.body;const toggle=document.querySelector('#theme-toggle');const key='portfolio-theme';function apply(dark){root.classList.toggle('dark-mode',dark);toggle?.setAttribute('aria-label',dark?'Switch to light mode':'Switch to dark mode');if(toggle)toggle.innerHTML=dark?'☼ <span>Theme</span>':'◐ <span>Theme</span>';try{localStorage.setItem(key,dark?'dark':'light')}catch{}}let dark=false;try{dark=localStorage.getItem(key)==='dark'}catch{}apply(dark);toggle?.addEventListener('click',()=>apply(!root.classList.contains('dark-mode')));
-const targets=document.querySelectorAll('.section-heading,.project-row,.about-inner,.repo-status,.repo-grid,.contact-inner,.hero-copy,.hero-art');targets.forEach(el=>el.classList.add('reveal'));if('IntersectionObserver'in window){const io=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('is-visible');io.unobserve(e.target)}}),{threshold:.12,rootMargin:'0px 0px -35px 0px'});targets.forEach(el=>io.observe(el))}else targets.forEach(el=>el.classList.add('is-visible'));
-// Gentle pointer-based perspective on project panels and hero sculpture.
-const fine=matchMedia('(pointer:fine)').matches&&!matchMedia('(prefers-reduced-motion: reduce)').matches;if(fine){document.querySelectorAll('.project-row').forEach(el=>{el.addEventListener('pointermove',e=>{const r=el.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;el.style.transform=`perspective(900px) rotateY(${x*2.4}deg) rotateX(${-y*1.8}deg) translateZ(2px)`});el.addEventListener('pointerleave',()=>el.style.transform='')});const art=document.querySelector('.hero-art');art?.addEventListener('pointermove',e=>{const r=art.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;art.style.transform=`perspective(900px) rotateY(${x*3}deg) rotateX(${-y*2.5}deg)`});art?.addEventListener('pointerleave',()=>art.style.transform='')}
+(() => {
+  const root = document.documentElement;
+  const toggle = document.querySelector('#theme-toggle');
+  const key = 'portfolio-theme';
+
+  function apply(dark, save) {
+    root.classList.toggle('dark-mode', dark);
+    if (toggle) {
+      toggle.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
+      toggle.innerHTML = (dark ? '☼' : '◐') + ' <span>Theme</span>';
+    }
+    if (save) { try { localStorage.setItem(key, dark ? 'dark' : 'light'); } catch {} }
+  }
+  let stored = null;
+  try { stored = localStorage.getItem(key); } catch {}
+  apply(stored ? stored === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches, false);
+  toggle?.addEventListener('click', () => apply(!root.classList.contains('dark-mode'), true));
+
+  const copyBtn = document.getElementById('copy-email');
+  copyBtn?.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(copyBtn.dataset.email);
+      copyBtn.textContent = 'Copied ✓';
+    } catch { copyBtn.textContent = copyBtn.dataset.email; }
+    setTimeout(() => { copyBtn.textContent = 'Copy email'; }, 2200);
+  });
+
+  const targets = document.querySelectorAll('.section-heading,.project-row,.about-inner,.repo-status,.repo-grid,.contact-inner,.hero-copy,.hero-card');
+  targets.forEach(el => el.classList.add('reveal'));
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver(entries => entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('is-visible'); io.unobserve(e.target); }
+    }), { threshold: .12, rootMargin: '0px 0px -35px 0px' });
+    targets.forEach(el => io.observe(el));
+  } else targets.forEach(el => el.classList.add('is-visible'));
 })();

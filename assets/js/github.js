@@ -1,15 +1,9 @@
 (() => {
   "use strict";
 
-  const storageKey = "portfolio.github.username";
   const status = document.getElementById("repo-status");
   const statusText = document.getElementById("repo-status-text");
   const grid = document.getElementById("repo-grid");
-  const refreshButton = document.getElementById("refresh-repos");
-  const form = document.getElementById("username-form");
-  const input = document.getElementById("github-username");
-  const editButton = document.getElementById("edit-username");
-  const cancelButton = document.getElementById("cancel-username");
   const languageColors = { JavaScript: "#d4a72c", TypeScript: "#527ac4", PHP: "#777bb4", Python: "#4b8a73", HTML: "#d16b4b", CSS: "#6f8dbd", Rust: "#b45d48", Go: "#61a9a6" };
   let activeController = null;
 
@@ -34,7 +28,7 @@
     const top = document.createElement("div");
     top.className = "repo-card-top";
     const owner = document.createElement("span");
-    owner.textContent = repo.fork ? "FORKED PROJECT" : "PUBLIC REPOSITORY";
+    owner.textContent = repo.fork ? "FORK" : "REPOSITORY";
     const external = document.createElement("span");
     external.className = "repo-icon";
     external.setAttribute("aria-hidden", "true");
@@ -44,7 +38,7 @@
     const title = document.createElement("h3");
     title.textContent = repo.name;
     const description = document.createElement("p");
-    description.textContent = repo.description || "A public project, shared from the workbench.";
+    description.textContent = repo.description || "No description provided.";
     const footer = document.createElement("div");
     footer.className = "repo-card-foot";
     if (repo.language) {
@@ -107,9 +101,7 @@
     if (activeController) activeController.abort();
     activeController = new AbortController();
     const controller = activeController;
-    refreshButton.classList.add("is-loading");
-    refreshButton.disabled = true;
-    setStatus(`Looking for ${cleanUsername}’s public repositories…`, "loading");
+        setStatus(`Loading recent repositories…`, "loading");
     showSkeletons();
     try {
       const response = await fetch(`https://api.github.com/users/${encodeURIComponent(cleanUsername)}/repos?sort=updated&direction=desc&per_page=6&type=owner`, {
@@ -130,44 +122,14 @@
       const retry = document.createElement("button");
       retry.type = "button";
       retry.className = "repo-empty";
-      retry.textContent = `${error.message} Click to retry.`;
+      retry.textContent = `${error.message} Select to retry.`;
       retry.addEventListener("click", () => loadRepos(cleanUsername, true));
       grid.append(retry);
       setStatus("Repositories couldn’t be loaded.", "error");
-    } finally {
-      if (controller === activeController) {
-        refreshButton.classList.remove("is-loading");
-        refreshButton.disabled = false;
-      }
     }
   };
 
-  const saved = localStorage.getItem(storageKey) || window.PORTFOLIO_PROFILE?.github || "";
-  input.value = saved;
-  if (saved) loadRepos(saved);
-
-  editButton.addEventListener("click", () => {
-    form.hidden = !form.hidden;
-    if (!form.hidden) {
-      input.value = localStorage.getItem(storageKey) || "";
-      input.focus();
-    }
-  });
-  cancelButton.addEventListener("click", () => { form.hidden = true; });
-  form.addEventListener("submit", event => {
-    event.preventDefault();
-    const username = input.value.trim().replace(/^@/, "");
-    if (username && !/^[A-Za-z0-9-]{1,39}$/.test(username)) {
-      input.setCustomValidity("Enter a GitHub username using letters, numbers, or hyphens.");
-      input.reportValidity();
-      return;
-    }
-    input.setCustomValidity("");
-    if (username) localStorage.setItem(storageKey, username);
-    else localStorage.removeItem(storageKey);
-    form.hidden = true;
-    loadRepos(username);
-  });
-  input.addEventListener("input", () => input.setCustomValidity(""));
-  refreshButton.addEventListener("click", () => loadRepos(localStorage.getItem(storageKey) || input.value, true));
+  const username = window.PORTFOLIO_PROFILE?.github || "";
+  if (username) loadRepos(username);
+  else { setStatus("GitHub profile not configured.", "idle"); }
 })();

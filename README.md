@@ -1,7 +1,32 @@
-# Personal portfolio
+# Titus Ronno — Developer Portfolio
 
-A PHP-rendered, responsive portfolio with live public GitHub repositories. Profile copy, links, skills, sample work, and the site's default `github_username` are in `config.php`; replace the example values before sharing the site. Setting `github_username` there makes repositories load automatically for every visitor. The project list is intentionally sample content and should be edited to reflect real work.
+A fast, responsive portfolio site. It showcases selected projects, technical skills and live public GitHub repositories, and is built with plain PHP, CSS and JavaScript, with no build step or framework.
 
-The GitHub section’s **Set GitHub username** control saves an optional visitor-specific username in that browser (`localStorage`); the public default is set by the site owner in `config.php`. The page calls GitHub’s unauthenticated public endpoint directly from the browser; no token, OAuth, server-side proxy, or private repository access is used. This requires JavaScript and a browser/network that can reach `api.github.com`.
+## Features
 
-Serve the directory with a PHP-capable web server and open `index.php`. PHP 8+ is recommended (the template uses `str_starts_with`).
+- **Single-file content:** all text, projects, skills and links live in `config.php`
+- **Live GitHub repositories:** the latest public repos load automatically from GitHub's public API
+- **Light and dark themes:** follows the system setting, with a manual toggle that is remembered
+- **Responsive and accessible:** mobile-first layout, skip link, keyboard focus styles, reduced-motion support
+- **SEO-ready:** meta description, Open Graph and Twitter tags, canonical URL and Person structured data
+- **Print-friendly:** prints cleanly as a one-page summary
+
+## Tech stack
+
+PHP 8+ · HTML5 · CSS3 (custom properties) · Vanilla JavaScript
+
+## Project structure
+
+```
+├── index.php              # Page template
+├── config.php             # All editable content
+├── assets/
+│   ├── css/site.css       # Styles and themes
+│   └── js/
+│       ├── github.js          # Fetches and renders repositories
+│       └── portfolio-motion.js # Theme toggle, scroll reveals, copy-email
+├── favicon.svg
+└── robots.txt
+```
+
+
